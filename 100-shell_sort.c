@@ -1,50 +1,48 @@
 #include "sort.h"
 
 /**
- * shell_sort - func sorts array of integers in ascending order
- *
- * @array: array of int
- * @size: number of elmns
+ * swap_ints - Swap two integers in an array.
+ * @a: The first integer to swap.
+ * @b: The second integer to swap.
  */
-void shell_sort(int *array, size_t size)
+void swap_ints(int *a, int *b)
 {
-	size_t i, j, gap, a;
+	int tmp;
 
-	gap = 1;
-	while (gap < size)
-		gap = (gap * 3) + 1;
-	gap = (gap - 1) / 3;
-
-	while (gap > 0)
-	{
-		for (i = 0; i < size; i++)
-		{
-			for (j = i; j < size - gap; j += gap)
-			{
-				if (array[j] > array[j + gap])
-					swap(&array[j], &array[j + gap]);
-				a = j;
-				while (a >= gap)
-				{
-					if (array[a] < array[a - gap])
-						swap(&array[a], &array[a - gap]);
-					a -= gap;
-				}
-			}
-		}
-		gap = (gap - 1) / 3;
-		print_array(array, size);
-	}
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
 }
 
 /**
- * swap - .........
- * @x: .....
- * @y: .....
+ * shell_sort - Sort an array of integers in ascending
+ *              order using the shell sort algorithm.
+ * @array: An array of integers.
+ * @size: The size of the array.
+ *
+ * Description: Uses the Knuth interval sequence.
  */
-void swap(int *x, int *y)
+void shell_sort(int *array, size_t size)
 {
-	int temp = *x;
-	*x = *y;
-	*y = temp;
+	size_t gap, i, j;
+
+	if (array == NULL || size < 2)
+		return;
+
+	for (gap = 1; gap < (size / 3);)
+		gap = gap * 3 + 1;
+
+	for (; gap >= 1; gap /= 3)
+	{
+		for (i = gap; i < size; i++)
+		{
+			j = i;
+			while (j >= gap && array[j - gap] > array[j])
+			{
+				swap_ints(array + j, array + (j - gap));
+				j -= gap;
+			}
+		}
+		print_array(array, size);
+	}
 }
